@@ -3,6 +3,6 @@ from produit.models import Product
 
 # Create your models here.
 
-class Stock:
+class Stock(models.Model):
     quantite = models.IntegerField()
     produit = models.ForeignKey(Product)
