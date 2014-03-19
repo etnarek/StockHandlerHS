@@ -47,15 +47,28 @@ class Command(BaseCommand):
             self.getPrix(p)
             print("Voulez-vous acheter? [Y/n]")
             choice = raw_input(">>")
-            # TODO: proposer de prendre une quantitée plus grande
             if len(choice) == 0 or choice[0].upper() == "Y":
-                try:
-                    s = Stock.objects.get(produit=p)
-                    s.quantite-=1
-                    s.save()
-                    print("Vous devez {} au Hackerspace.".format(p.price))
-                except:
-                    print("{} ne se trouve pas dans la base de donnée des objets stockés.".format(p.name))
+                quantityChosen = False
+                while not quantityChosen:
+                    quantity = raw_input("Quelle quantité voulez-vous?")
+                    if len(quantity)==0:
+                        quantity = 1
+                        quantityChosen = True
+                    else:
+                        try:
+                            quantity = int(quantity)
+                        except:
+                            print("C'est un chiffre ça?!")
+                        else:
+                            quantityChosen = True
+                for i in range(quantity):
+                    try:
+                        s = Stock.objects.get(produit=p)
+                        s.quantite-=1
+                        s.save()
+                    except:#TODO : differencier 
+                        print("{} ne se trouve pas dans la base de donnée des objets stockés.".format(p.name))
+                print("Vous devez {} au Hackerspace.".format(quantity*p.price))
             else:
                 print("Vous n'avez pas acheté: {}".format(p.name))
         else:
@@ -67,9 +80,9 @@ class Command(BaseCommand):
             print("Il faut rajouter se produit à la base de donnée.")
             self.new()
         else:
-            quantity = raw_input("Quel est la quantitée ajoutée? ")
+            quantity = raw_input("Quel est la quantité ajoutée? ")
             s = Stock.objects.get(produit=p)
-            s.quantite+=float(quantity)
+            s.quantite+=int(quantity)
             s.save()
 
     def new(self, barcode=""):
@@ -78,7 +91,7 @@ class Command(BaseCommand):
         if self.getProduit(barcode) == None:
             name = raw_input("Entrez le nom du produit: ")
             price = raw_input("Entrez le prix: ")
-            quantity = raw_input("Entrez la quantitée: ")
+            quantity = raw_input("Entrez la quantité: ")
             p = Product(barcode=barcode, name=name, price=price)
             p.save()
             s = Stock(produit=p, quantite=quantity)
