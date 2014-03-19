@@ -91,8 +91,8 @@ class Command(BaseCommand):
             barcode = self.scan()
         if self.getProduit(barcode) == None:
             name = raw_input("Entrez le nom du produit: ")
-            price = raw_input("Entrez le prix: ")
-            quantity = raw_input("Entrez la quantité: ")
+            price = float(raw_input("Entrez le prix: "))
+            quantity = int(raw_input("Entrez la quantité: "))
             p = Product(barcode=barcode, name=name, price=price)
             p.save()
             s = Stock(produit=p, quantite=quantity)
@@ -101,9 +101,9 @@ class Command(BaseCommand):
             p = Product.objects.get(barcode=barcode)
             name = raw_input("Entrez le nouveau nom du produit: ")
             price = raw_input("Entrez le nouveau prix: ")
-            quantity = raw_input("Entrez la quantitée supplémentaire: ")
+            quantity = raw_input("Entrez la quantité supplémentaire: ")
             p.name = name
-            p.price = price
+            p.price = float(price)
             p.save()
             s = Stock.objects.get(produit=p)
             s.quantite += int(quantity)
@@ -115,7 +115,7 @@ class Command(BaseCommand):
         while not quit:
             os.system("clear")
             print("Comment voulez-vous modifier les stocks?")
-            print("N : nouveau produit/Editer info produit\nA : augmenter la cantité d'un produit\nQ : quitter\n(Rien = A)")
+            print("N : nouveau produit/Editer info produit\nA : augmenter la quantité d'un produit\nQ : quitter\n(Rien = A)")
             choice = raw_input(">> ")
             if len(choice) == 0 or choice[0].upper() == 'A':
                 self.add()
@@ -128,7 +128,10 @@ class Command(BaseCommand):
                 raw_input(">>")
 
     def show(self):
-        pass
+        os.system("clear")
+        print("INVENTAIRE")
+        for stocks in Stock.objects.all():
+            print("Il reste {} {}".format(stocks.quantite,stocks.produit.name))
 
 
     def scan(self):
