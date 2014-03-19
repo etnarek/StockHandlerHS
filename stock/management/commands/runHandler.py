@@ -15,46 +15,77 @@ class Command(BaseCommand):
         self.init()
         while True:
             os.system("clear")
-            print("Hello, que voulez-vous faire?")
-            choice = raw_input("P : Connaitre le prix, G : gérer les stocks, A : afficher les stocks, (Rien = acheter) ")
+            print("\nHello, que voulez-vous faire?")
+            print("P : Connaitre le prix\nG : gérer les stocks\nA : afficher les stocks\n(Rien = acheter)\n")
+            choice = raw_input(">> ")
             if len(choice) == 0:
                 self.retrieve()
             elif choice[0].upper() == 'P':
                 self.getPrix()
+                raw_input(">>")
             elif choice[0].upper() == 'G':
                 self.manageStock()
             elif choice[0].upper() == 'A':
                 self.show()
+                raw_input(">>")
             else:
                 print("Ce choix n'est pas valide.")
+                raw_input(">>")
 
     def add(self):
         pass
 
     def getPrix(self, product = None):
         if product == None:
-            product = self.scan()
-        print("Un {} coute {} €".format(product.name(), product.price()))
+            product = self.getProduit()
+        if product != None:
+            print("Un {} coute {} €".format(product.name, product.price))
+        else:
+            print("Le produit ne se trouve pas dans la base de donnée.")
 
     def retrieve(self):
         pass
 
     def new(self):
-        pass
-
-    def dele(self):
-        pass
+        barcode = self.scan()
+        name = raw_input("Entrez le nom du produit: ")
+        price = raw_input("Entrez le prix: ")
+        quantity = raw_input("Entrez la quantitée: ")
+        p = Product(barcode=barcode, name=name, price=price)
+        p.save()
+        s = Stock(produit=p, quantite=quantity)
+        s.save()
 
     def manageStock(self):
-        pass
+        quit = False
+        while not quit:
+            os.system("clear")
+            print("Comment voulez-vous modifier les stocks?")
+            print("N : nouveau produit\nA : augmenter la cantité d'un produit\nQ : quitter\n(Rien = A)")
+            choice = raw_input(">> ")
+            if len(choice) == 0 or choice[0].upper() == 'A':
+                self.add()
+            elif choice[0].upper() == 'N':
+                self.new()
+            elif choice[0].upper() == 'Q':
+                quit = True
+            else:
+                print("Ce choix n'est pas valide.")
+                raw_input(">>")
 
     def scan(self):
         print("Scanning ...")
         self.scanner.process_one()
         print("\a")
-
         for symbol in self.scanner.results:
-            return Product.objects.get(barcode=str(symbol.data))
+            return str(symbol.data)
+
+    def getProduit(self):
+        barcode = self.scan()
+        try:
+            return Product.objects.get(barcode=str(barcode))
+        except:
+            return None
 
     def init(self):
         scanner = zbar.Processor()
