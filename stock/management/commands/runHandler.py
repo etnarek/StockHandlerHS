@@ -32,9 +32,6 @@ class Command(BaseCommand):
                 print("Ce choix n'est pas valide.")
                 raw_input(">>")
 
-    def add(self):
-        pass
-
     def getPrix(self, product = None):
         if product == None:
             product = self.getProduit()
@@ -44,10 +41,38 @@ class Command(BaseCommand):
             print("Le produit ne se trouve pas dans la base de donnée.")
 
     def retrieve(self):
-        pass
+        p = self.getProduit()
+        if p != None:
+            self.getPrix(p)
+            print("Voulez-vous acheter? [Y/n]")
+            choice = raw_input(">>")
+            # TODO: proposer de prendre une quantitée plus grande
+            if len(choice) == 0 or choice[0].upper() == "Y":
+                try:
+                    s = Stock.objects.get(produit=p)
+                    s.quantite-=1
+                    s.save()
+                except:
+                    print("{} ne se trouve pas dans la base de donnée des objets stockés.".format(p.name))
+            else:
+                print("Vous n'avez pas acheté: {}".format(p.name))
+        else:
+            print("Ce produit n'est pas dans ma base de donnée.")
 
-    def new(self):
-        barcode = self.scan()
+    def add(self):
+        p = self.getProduit()
+        if p == None:
+            print("Il faut rajouter se produit à la base de donnée.")
+            self.new()
+        else:
+            quantity = raw_input("Quel est la quantitée ajoutée? ")
+            s = Stock.objects.get(produit=p)
+            s.quantite+=float(quantity)
+            s.save()
+
+    def new(self, barcode=""):
+        if len(barcode) == 0:
+            barcode = self.scan()
         name = raw_input("Entrez le nom du produit: ")
         price = raw_input("Entrez le prix: ")
         quantity = raw_input("Entrez la quantitée: ")
