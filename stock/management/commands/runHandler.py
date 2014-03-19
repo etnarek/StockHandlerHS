@@ -61,13 +61,14 @@ class Command(BaseCommand):
                             print("C'est un chiffre ça?!")
                         else:
                             quantityChosen = True
-                for i in range(quantity):
-                    try:
-                        s = Stock.objects.get(produit=p)
-                        s.quantite-=1
-                        s.save()
-                    except:#TODO : differencier 
-                        print("{} ne se trouve pas dans la base de donnée des objets stockés.".format(p.name))
+                try:
+                    s = Stock.objects.get(produit=p)
+                    s.quantite-=quantity
+                    if s.quantite < 0:
+                        s.quantite = 0
+                    s.save()
+                except:#TODO : differencier
+                    print("{} ne se trouve pas dans la base de donnée des objets stockés.".format(p.name))
                 print("Vous devez {} au Hackerspace.".format(quantity*p.price))
             else:
                 print("Vous n'avez pas acheté: {}".format(p.name))
