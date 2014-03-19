@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 class Produit:
     def __init__(self,name,barcode,price):
         self.name = name
@@ -5,9 +7,9 @@ class Produit:
         self.price = price
     def __repr__(self):
         string = "Product name : {0}, Barcode : {1}, Price : {2} ".format(self.name, str(self.barcode), str(self.price))
-        return string 
+        return string
     def __str__(self):
         return self.__repr__()
 
     def qprint(self,quantity):
-        print "Product name : {0}, Barcode : {1}, Quantity : {3}, Price : {2} ".format(self.name, str(self.barcode), str(self.price),str(quantity))
+        print("Product name : {0}, Barcode : {1}, Quantity : {3}, Price : {2} ".format(self.name, str(self.barcode), str(self.price),str(quantity)))
