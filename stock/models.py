@@ -6,3 +6,6 @@ from produit.models import Product
 class Stock(models.Model):
     quantite = models.IntegerField()
     produit = models.ForeignKey(Product)
+
+    def __unicode__(self):
+        return "{0:0>4} | {1}".format(self.quantite, self.produit.name)
