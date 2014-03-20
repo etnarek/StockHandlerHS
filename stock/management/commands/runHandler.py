@@ -94,7 +94,8 @@ class Command(BaseCommand):
             name = raw_input("Entrez le nom du produit: ")
             price = float(raw_input("Entrez le prix: "))
             quantity = int(raw_input("Entrez la quantité: "))
-            p = Product(barcode=barcode, name=name, price=price)
+            minQuantity = int(raw_input("Entrez la quantité minimale"))
+            p = Product(barcode=barcode, name=name, price=price, minQuantity = minQuantity)
             p.save()
             s = Stock(produit=p, quantite=quantity)
             s.save()
@@ -103,8 +104,13 @@ class Command(BaseCommand):
             name = raw_input("Entrez le nouveau nom du produit: ")
             price = raw_input("Entrez le nouveau prix: ")
             quantity = raw_input("Entrez la quantité supplémentaire: ")
-            p.name = name
-            p.price = float(price)
+            minQuantity = raw_input("Entrez la quantité minimale: ")
+            if len(name)>0:
+                p.name = name
+            if len(price) > 0:
+                p.price = float(price)
+            if len(minQuantity) > 0:
+                p.minQuantity = int(minQuantity)
             p.save()
             s = Stock.objects.get(produit=p)
             s.quantite += int(quantity)
@@ -137,6 +143,8 @@ class Command(BaseCommand):
         for stocks in Stock.objects.all():
             if stocks.quantite == 0:
                 print('\033[101m', end="")
+            elif stocks.quantite < stocks.produit.minQuantity:
+                print('\033[1;93m', end="")                
             print("{:8} | {:5} | {}".format(stocks.quantite,stocks.produit.price, stocks.produit.name))
             print('\033[0m', end="")
 
