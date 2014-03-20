@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+from __future__ import print_function
 from django.core.management.base import BaseCommand, CommandError
 from produit.models import Product
 from stock.models import Stock
@@ -129,9 +130,15 @@ class Command(BaseCommand):
 
     def show(self):
         os.system("clear")
-        print("INVENTAIRE")
+
+        print("quantité | prix  | nom")
+        rows, columns = os.popen('stty size', 'r').read().split()
+        print('-'*int(columns))
         for stocks in Stock.objects.all():
-            print("Il reste {} {}".format(stocks.quantite,stocks.produit.name))
+            if stocks.quantite == 0:
+                print('\033[101m', end="")
+            print("{:8} | {:5} | {}".format(stocks.quantite,stocks.produit.price, stocks.produit.name))
+            print('\033[0m', end="")
 
 
     def scan(self):
