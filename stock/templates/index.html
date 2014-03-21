@@ -22,14 +22,14 @@
 </style>
 </head>
 <body>
-{% if stocks %}
+{% if products %}
     <table>
         <tr>
             <td> Name: </td>
             <td> Price: </td>
             <td> Remaining: </td>
         </tr>
-        {% for s in stocks %}
+        {% for p in products %}
         {% if s.quantite == 0 %}
         <tr class="empty">
         {% elif s.quantite < s.produit.minQuantity %}
@@ -37,9 +37,9 @@
         {% else %}
         <tr>
         {% endif %}
-            <td> {{ s.produit.name }} </td>
-            <td> {{ s.produit.price }} </td>
-            <td> {{ s.quantite }} </td>
+            <td> {{ p.name }} </td>
+            <td> {{ p.price }} </td>
+            <td> {{ p.quantite }} </td>
         </tr>
         {% endfor %}
     </table>
