@@ -7,7 +7,7 @@ class Product(models.Model):
     barcode = models.CharField(max_length=200)
     price = models.FloatField()
     minQuantity = models.IntegerField()
-    quantite = models.IntegerField()
+    quantity = models.IntegerField()
 
     def __unicode__(self):
         return "{0:0>4} | {1}".format(self.quantite, self.name)

@@ -62,9 +62,9 @@ class Command(BaseCommand):
                         else:
                             quantityChosen = True
                 try:
-                    p.quantite-=quantity
-                    if p.quantite < 0:
-                        p.quantite = 0
+                    p.quantity-=quantity
+                    if p.quantity < 0:
+                        p.quantity = 0
                     p.save()
                 except:#TODO : differencier
                     print("{} ne se trouve pas dans la base de donnée des objets stockés.".format(p.name))
@@ -81,7 +81,7 @@ class Command(BaseCommand):
             self.new()
         else:
             quantity = raw_input("Quel est la quantité ajoutée? ")
-            p.quantite+=int(quantity)
+            p.quantity+=int(quantity)
             p.save()
 
     def new(self, barcode=""):
@@ -92,7 +92,7 @@ class Command(BaseCommand):
             price = float(raw_input("Entrez le prix: "))
             quantity = int(raw_input("Entrez la quantité: "))
             minQuantity = int(raw_input("Entrez la quantité minimale"))
-            p = Product(barcode=barcode, name=name, price=price, minQuantity = minQuantity, quantite=quantity)
+            p = Product(barcode=barcode, name=name, price=price, minQuantity = minQuantity, quantity=quantity)
             p.save()
         else:
             p = Product.objects.get(barcode=barcode)
@@ -106,7 +106,7 @@ class Command(BaseCommand):
                 p.price = float(price)
             if len(minQuantity) > 0:
                 p.minQuantity = int(minQuantity)
-            p.quantite += int(quantity)
+            p.quantity += int(quantity)
             p.save()
 
 
@@ -134,11 +134,11 @@ class Command(BaseCommand):
         rows, columns = os.popen('stty size', 'r').read().split()
         print('-'*int(columns))
         for stocks in Product.objects.all():
-            if stocks.quantite == 0:
+            if stocks.quantity == 0:
                 print('\033[101m', end="")
-            elif stocks.quantite < stocks.minQuantity:
+            elif stocks.quantity < stocks.minQuantity:
                 print('\033[1;93m', end="")
-            print("{:8} | {:5} | {}".format(stocks.quantite,stocks.price, stocks.name))
+            print("{:8} | {:5} | {}".format(stocks.quantity,stocks.price, stocks.name))
             print('\033[0m', end="")
 
 
