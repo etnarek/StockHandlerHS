@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> StockHandlerHS </title>
+<style>
+    .empty{
+        background-color:red;
+    }
+    .warning{
+        background-color:yellow;
+    }
+    body{
+        margin:auto;
+        float:center;
+        text-align:center;
+    }
+    table,th, td
+    {
+        margin:auto;
+        border: 0.5px solid black;
+    }
+</style>
+</head>
+<body>
+{% if products %}
+    <table>
+        <tr>
+            <td> Name: </td>
+            <td> Price: </td>
+            <td> Remaining: </td>
+        </tr>
+        {% for p in products %}
+        {% if p.quantity == 0 %}
+        <tr class="empty">
+        {% elif p.quantity < p.minQuantity %}
+        <tr class="warning">
+        {% else %}
+        <tr>
+        {% endif %}
+            <td> {{ p.name }} </td>
+            <td> {{ p.price }} </td>
+            <td> {{ p.quantity }} </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p> There is nothing in stocks.</p>
+{% endif %}
+</body>
+</html>

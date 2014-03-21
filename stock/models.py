@@ -1,11 +1,13 @@
 from django.db import models
-from produit.models import Product
 
 # Create your models here.
 
-class Stock(models.Model):
-    quantite = models.IntegerField()
-    produit = models.ForeignKey(Product)
+class Product(models.Model):
+    name = models.CharField(max_length=200)
+    barcode = models.CharField(max_length=200)
+    price = models.FloatField()
+    minQuantity = models.IntegerField()
+    quantity = models.IntegerField()
 
     def __unicode__(self):
-        return "{0:0>4} | {1}".format(self.quantite, self.produit.name)
+        return "{0:0>4} | {1}".format(self.quantite, self.name)
