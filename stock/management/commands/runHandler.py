@@ -101,16 +101,23 @@ class Command(BaseCommand):
             s.save()
         else:
             p = Product.objects.get(barcode=barcode)
-            name = raw_input("Entrez le nouveau nom du produit: ")
+            name = raw_input("Entrez le nouveau nom du produit [] : ")
             price = raw_input("Entrez le nouveau prix: ")
             quantity = raw_input("Entrez la quantité supplémentaire: ")
             minQuantity = raw_input("Entrez la quantité minimale: ")
             if len(name)>0:
                 p.name = name
             if len(price) > 0:
-                p.price = float(price)
+                try:
+                    p.price = float(price)
+                except ValueError:
+                    print("Un chiffre pls :'(")
             if len(minQuantity) > 0:
-                p.minQuantity = int(minQuantity)
+                try:
+                    p.minQuantity = int(minQuantity)
+                except ValueError:
+                    print("Un chiffre pls :'(")
+                
             p.save()
             s = Stock.objects.get(produit=p)
             s.quantite += int(quantity)
