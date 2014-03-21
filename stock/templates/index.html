@@ -30,9 +30,9 @@
             <td> Remaining: </td>
         </tr>
         {% for p in products %}
-        {% if s.quantite == 0 %}
+        {% if p.quantite == 0 %}
         <tr class="empty">
-        {% elif s.quantite < s.produit.minQuantity %}
+        {% elif p.quantite < p.minQuantity %}
         <tr class="warning">
         {% else %}
         <tr>
