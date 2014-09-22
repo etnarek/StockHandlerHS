@@ -10,4 +10,4 @@ class Product(models.Model):
     quantity = models.IntegerField()
 
     def __unicode__(self):
-        return "{0:0>4} | {1}".format(self.quantite, self.name)
+        return "{0:0>4} | {1}".format(self.quantity, self.name)
